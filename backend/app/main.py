@@ -10,9 +10,16 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.routers import ROUTERS
+from app.services.gap_contract import gap_contract_service
 from app.store import store
 
 app = FastAPI(title="IoT设备数据接入与协议适配平台", version="1.0.0")
+
+
+@app.on_event("startup")
+def _init_gap_contract_scenario() -> None:
+    """启动即准备升级演练断点（旧自由文本、时区/开闭区间变体、无法解析旧串）。"""
+    gap_contract_service.reset_scenario()
 
 app.add_middleware(
     CORSMiddleware,
